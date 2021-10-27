@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "game-gRPC/proto";
+
+package proto;
+
+
+service SquidGame {
+  rpc StratGame (GameRequest) returns (GameReply) {}
+}
+
+message GameRequest {
+  string idGame = 1;
+  string player = 2;
+  string runGames = 3;
+}
+
+message GameReply {
+  string resultado = 1;
+}
