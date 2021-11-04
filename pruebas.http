@@ -1,5 +1,5 @@
 ###
-POST http://localhost:2000/game/5/gameName/1/players/2
+POST http://localhost:2000/game/3/gameName/juego2/players/53
 Content-Type: "application/json"
 
 {}
