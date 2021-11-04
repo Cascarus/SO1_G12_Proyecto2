@@ -52,7 +52,7 @@ func stratGame(w http.ResponseWriter, req *http.Request) {
 func main() {
 	router := mux.NewRouter().StrictSlash(false)
 	router.HandleFunc("/", IndexHandler)
-	router.HandleFunc("/game/{game}/gameName/{runGame}/player/{player}", stratGame).Methods("POST")
+	router.HandleFunc("/game/{game}/gameName/{runGame}/players/{player}", stratGame).Methods("POST")
 	log.Println("Listening on port => 2000")
 	log.Fatal(http.ListenAndServe(":2000", router))
 }
