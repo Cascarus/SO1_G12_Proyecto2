@@ -9,36 +9,54 @@ import (
 	"cloud.google.com/go/pubsub"
 	"strconv"
 	ts "pubsub/types"
+
+	"io/ioutil"
+	"google.golang.org/api/option"
+	"golang.org/x/oauth2/google"
 )
 
 var topic *pubsub.Topic
 
-func InitPubSub(message ts.Log) {
+func InitPubSub() error {
 
 	err:= start()
 
 	if err != nil{
-		fmt.Println("Not connected to topic")
+		fmt.Println("Couldn't connect to topic")
+		return errors.New("Couldn't connect to topic")
 	}else{
 		fmt.Println("Connected to topic")
-		err:= publishMessage(message)
-		topic.Stop()
-
-		if err!= nil{
-			fmt.Println("Message not published")
-		}
+		return nil
 	}
 }
 
 
+func createClient(ctx context.Context) (*pubsub.Client, error) {
+
+	data, er := ioutil.ReadFile("./PK/ps.json")
+	if er != nil {
+		log.Fatal(er)
+	}
+	creds, err := google.CredentialsFromJSON(ctx, []byte(data), pubsub.ScopePubSub)
+	if err != nil {
+		return nil, errors.New("Error with cred file")
+	}
+
+	client, err := pubsub.NewClient(ctx, os.Getenv("PROYECT"), option.WithCredentials(creds))
+	return client, err
+}
+
 
 func start() error {
 
-	fmt.Println("================================ STARTING")
-
 	ctx := context.Background()
 
-	client, err := pubsub.NewClient(ctx, os.Getenv("PROYECT"))
+	//************************************** REDING CRED FILE AND CREATING A CLIENT
+
+	client, err := createClient(ctx)
+
+	//************************************** VERIFY IF THE TOPIC EXISTS
+	
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -47,7 +65,8 @@ func start() error {
 	topicName := os.Getenv("TOPIC")
 	topic = client.Topic(topicName)
 
-	// Create the topic if it doesn't exist.
+	//************************************** CREATE THE TOPIC IF IT DOESN'T EXISTS
+
 	exists, err := topic.Exists(ctx)
 	if err != nil {
 		log.Print(err)
@@ -60,20 +79,21 @@ func start() error {
 			return errors.New("Topic couldn't be created...")
 		}
 	}
-
 	return nil
+
+	//****************************************************************************
 }
 
 
-func publishMessage(message ts.Log) error {
+func PublishMessage(message ts.Log) error {
 
 	ctx := context.Background()
-	client, err := pubsub.NewClient(ctx, os.Getenv("PROYECT"))
-	if err != nil {
-		fmt.Println("Error 1")
-		return fmt.Errorf("pubsub.NewClient: %v", err)
-	}
-	defer client.Close()
+
+	//************************************** REDING CRED FILE AND CREATING A CLIENT
+
+	client, err := createClient(ctx)
+
+	//****************************************************************************
 
 	t := client.Topic(os.Getenv("TOPIC"))
 	result := t.Publish(ctx, &pubsub.Message{
@@ -87,7 +107,6 @@ func publishMessage(message ts.Log) error {
 					"worker":message.Worker,
 			},
 	})
-
 	// Block until the result is returned and a server-generated
 	// ID is returned for the published message.
 	id, err := result.Get(ctx)

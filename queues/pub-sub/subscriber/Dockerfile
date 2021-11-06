@@ -8,6 +8,6 @@ RUN apt-get update
 
 RUN go mod download
 
-EXPOSE 8080
+EXPOSE 8090
 
 CMD ["go", "run", "main.go"]

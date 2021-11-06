@@ -17,13 +17,33 @@ func publish(c *gin.Context) {
     if err := c.BindJSON(&newLog); err != nil {
         return
     }
-
-	ps.InitPubSub(newLog)
-
-	c.JSON(http.StatusInternalServerError, newLog)
+	
+	if connectedTopic {
+		err := ps.PublishMessage(newLog)
+		if err!= nil {
+			c.JSON(http.StatusInternalServerError, fmt.Sprint(err))
+		}else{
+			c.JSON(http.StatusOK, "Message sended")
+		}
+	}else{
+		connectToTopic()
+		c.JSON(http.StatusInternalServerError, "Server couldn't connect to the Topic")
+	}
 }
 
 
+func connectToTopic(){
+
+	err:=ps.InitPubSub()
+	if err!=nil{
+		fmt.Println(err)
+	}else{
+		connectedTopic = true
+	}
+
+}
+
+var connectedTopic = false
 func main() {
 
 	err := godotenv.Load("e.env")
@@ -31,7 +51,9 @@ func main() {
 		fmt.Println("Error loading enviroment variables")
 	}
 
-    fmt.Println("")
+	connectToTopic()
+
+	fmt.Println("")
     fmt.Println(" ==========================  SERVIDOR  ========================== ")
     fmt.Println("")
 	router := gin.Default()

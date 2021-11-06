@@ -3,10 +3,14 @@ POST http://localhost:8080/send
 Content-Type: "application/json"
 
 {
-    "request_number":100,
-	"game":1,
+    "request_number":1500,
+	"game":120,
 	"gamename":"Juego Uno",
-	"winner":"Helmut",
+	"winner":"Efrain",
 	"players":200,
 	"worker":"PubSub"
 }
+
+
+###
+GET http://localhost:8090/
