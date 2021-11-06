@@ -4,10 +4,10 @@ services:
 
   go:
     build: ./
-    image: queue:pubsub
+    image: pubsub:publisher
     ports: 
       - "8080:8080"
-    container_name: pubsub
+    container_name: pub
     volumes:
       - .:/usr/src/goApp
     #command: bash -c "go mod init pubsub"
