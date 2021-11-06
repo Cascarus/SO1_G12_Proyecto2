@@ -1,0 +1,21 @@
+version: "3.9"
+
+services: 
+
+  go:
+    build: ./
+    image: queue:pubsub
+    ports: 
+      - "8080:8080"
+    container_name: pubsub
+    volumes:
+      - .:/usr/src/goApp
+    #command: bash -c "go mod init pubsub"
+    #command: bash -c "go get github.com/gin-gonic/gin"
+    #command: bash -c "go get github.com/joho/godotenv"
+    #command: bash -c "go get cloud.google.com/go/pubsub"
+    #env_file:
+      #- ./GoApi/env.env
+    #environment:
+      #GOOGLE_APPLICATION_CREDENTALS: ./PK/PS_key.json
+      #GIN_MODE: release          
