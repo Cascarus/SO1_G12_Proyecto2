@@ -16,6 +16,7 @@ services:
     #command: bash -c "go get cloud.google.com/go/pubsub"
     #command: bash -c "go get google.golang.org/api/option"
     #command: bash -c "go get golang.org/x/oauth2/google"
+    #command: bash -c "go get github.com/go-redis/redis/v8"
     #env_file:
       #- ./GoApi/env.env
     #environment:
