@@ -13,7 +13,10 @@ import (
 	"io/ioutil"
 	"google.golang.org/api/option"
 	"golang.org/x/oauth2/google"
+	
+	rds "pubsub/redis"
 	ts "pubsub/types"
+	mongo "pubsub/mongo"
 )
 
 
@@ -35,6 +38,7 @@ func createClient(ctx context.Context) (*pubsub.Client, error) {
 func PullMsgs() error {
 	// projectID := "my-project-id"
 	// subID := "my-sub"
+	rds.CrateClient()
 	ctx := context.Background()
 	
 	client, err := createClient(ctx)
@@ -63,6 +67,14 @@ func PullMsgs() error {
 			Worker: msg.Attributes["worker"],
 		}
 		fmt.Println("New message", newLog)
+		rds.SetData("Winner", newLog.Winner)
+		result, mongoEr := mongo.Create(newLog)
+		if mongoEr!=nil{
+			log.Print(mongoEr)
+		}else{
+			fmt.Println(result)
+		}
+		
 		//msg.Ack()
 	})
 	if err != nil {

@@ -2,36 +2,42 @@ package redis
 
 import (
 	"context"
+    "fmt"
+    "log"
+    "os"
 	"github.com/go-redis/redis/v8"
 )
 
+var rdb *redis.Client
+var ctx = context.Background()
 
-/*func Client() {
-    rdb := redis.NewClient(&redis.Options{
-        Addr:     "localhost:6379",
+func CrateClient() {
+
+    rdb = redis.NewClient(&redis.Options{
+        Addr:     os.Getenv("REDIS_IP"),
         Password: "", // no password set
         DB:       0,  // use default DB
     })
+}
 
-    err := rdb.Set(ctx, "key", "value", 0).Err()
+
+func SetData(key, value string){
+
+    err := rdb.Set(ctx, key, value, 0).Err()
     if err != nil {
-        panic(err)
+        log.Print(err)
     }
+}
 
-    val, err := rdb.Get(ctx, "key").Result()
-    if err != nil {
-        panic(err)
-    }
-    fmt.Println("key", val)
+func getData(key string){
 
-    val2, err := rdb.Get(ctx, "key2").Result()
+    val, err := rdb.Get(ctx, key).Result()
     if err == redis.Nil {
-        fmt.Println("key2 does not exist")
+        fmt.Println(key, " does not exist")
     } else if err != nil {
-        panic(err)
+        log.Print(err)
     } else {
-        fmt.Println("key2", val2)
+        fmt.Println(key,": ", val)
     }
-    // Output: key value
-    // key2 does not exist
-}*/
+
+}
