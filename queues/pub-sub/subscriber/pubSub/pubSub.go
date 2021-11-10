@@ -51,9 +51,9 @@ func PullMsgs() error {
 	// Consume 10 messages.
 	var mu sync.Mutex
 	sub := client.Subscription(os.Getenv("SUB"))
-	cctx, cancel := context.WithTimeout(ctx, 120*time.Second)
+	cctx, cancel := context.WithTimeout(ctx, 3600*time.Second)
 	defer cancel()
-	fmt.Println("Subscriber will close in 120 Seconds")
+	fmt.Println("Subscriber will close in 3600 Seconds")
 
 	err = sub.Receive(cctx, func(ctx context.Context, msg *pubsub.Message) {
 		mu.Lock()

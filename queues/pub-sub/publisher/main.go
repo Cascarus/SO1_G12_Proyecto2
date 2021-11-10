@@ -32,6 +32,12 @@ func publish(c *gin.Context) {
 }
 
 
+func defaultRoute(c *gin.Context){
+
+	c.JSON(http.StatusOK, "Hola desde PubSub Publisher")
+}
+
+
 func connectToTopic(){
 
 	err:=ps.InitPubSub()
@@ -59,7 +65,7 @@ func main() {
 	router := gin.Default()
     router.Use(gin.Recovery()) // Para recuperarse de Errores y enviar un 500
 
-    //router.GET("/startLoad/go", startLoad)
+    router.GET("/pubsub", defaultRoute)
     router.POST("/send", publish)
 
     router.Run()
