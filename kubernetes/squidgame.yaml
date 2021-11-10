@@ -1,0 +1,156 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: squidgame
+spec: {}
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: grpc-deployment-pubsub
+  name: grpc-deployment-pubsub
+  namespace: squidgame
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: grpc-deployment-pubsub
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: grpc-deployment-pubsub
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      hostname: server
+      containers:
+      - name: grpc-game-server
+        image: cascarus/grpc-game-server
+        env:
+          - name: SERVICE_TYPE
+            value: "3"
+        ports:
+          - containerPort: 50051
+      - name: grpc-game-client
+        image: cascarus/grpc-game-client
+        ports:
+          - containerPort: 2000
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: grpc-deployment-pubsub
+  name: grpc-deployment-pubsub
+  namespace: squidgame
+spec:
+  ports:
+  - port: 2000
+    protocol: TCP
+    targetPort: 2000
+  selector:
+    app: grpc-deployment-pubsub
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+  namespace: squidgame
+spec:
+  rules:
+  - host: 35.227.30.166.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grpc-deployment-pubsub
+            port:
+              number: 2000
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: error-injector
+  namespace: squidgame
+data:
+ nginx.conf: |-
+    events {}
+    http {
+        server {
+          listen 2000;
+            location / {
+                return 500;
+            }
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: error-injector
+  namespace: squidgame
+  labels:
+    app: error-injector
+spec:
+  selector:
+    matchLabels:
+      app: error-injector
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: error-injector
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: error-injector
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: error-injector
+  namespace: squidgame
+spec:
+  ports:
+  - name: service
+    port: 2000
+  selector:
+    app: error-injector
+---
+apiVersion: split.smi-spec.io/v1alpha1
+kind: TrafficSplit
+metadata:
+  name: error-split
+  namespace: squidgame
+spec:
+  service: grpc-deployment-pubsub
+  backends:
+  - service: grpc-deployment-pubsub
+    weight: 900m
+  - service: error-injector
+    weight: 100m
