@@ -6,7 +6,7 @@ Content-Type: "application/json"
     "request_number":1500,
 	"game":120,
 	"gamename":"Juego Uno",
-	"winner":"Efrain",
+	"winner":"Cambio de nombre",
 	"players":200,
 	"worker":"PubSub"
 }

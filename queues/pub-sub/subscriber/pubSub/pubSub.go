@@ -8,7 +8,7 @@ import (
 	"errors"
 	"time"
 	"sync"
-
+	"encoding/json"
 	"cloud.google.com/go/pubsub"
 	"io/ioutil"
 	"google.golang.org/api/option"
@@ -61,12 +61,13 @@ func PullMsgs() error {
 		newLog:= ts.Log{
 			Request_number: msg.Attributes["request_number"],
 			Game: msg.Attributes["game"],
-			Game_name: msg.Attributes["gamename"],
+			Gamename: msg.Attributes["gamename"],
 			Winner: msg.Attributes["winner"],
 			Players: msg.Attributes["players"],
-			Worker: msg.Attributes["worker"],
+			Worker: "PubSub",
 		}
-		fmt.Println("New message", newLog)
+		jsonString, _:=json.Marshal(newLog)
+		fmt.Println("New message", string(jsonString))
 		rds.SetData("Winner", newLog.Winner)
 		result, mongoEr := mongo.Create(newLog)
 		if mongoEr!=nil{
@@ -75,7 +76,7 @@ func PullMsgs() error {
 			fmt.Println(result)
 		}
 		
-		//msg.Ack()
+		msg.Ack()
 	})
 	if err != nil {
 		return fmt.Errorf("Receive: %v", err)

@@ -101,7 +101,7 @@ func PublishMessage(message ts.Log) error {
 			Attributes: map[string]string{
 					"request_number": strconv.Itoa(message.Request_number),
 					"game":strconv.Itoa(message.Game),
-					"gamename":message.Game_name,
+					"gamename":message.Gamename,
 					"winner":message.Winner,
 					"players":strconv.Itoa(message.Players),
 					"worker":message.Worker,
