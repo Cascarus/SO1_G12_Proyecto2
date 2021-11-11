@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 32181                                                               #where to listen for connections by clients
+      #ZOOKEEPER_SERVER_ID: 1                                                                   #This is only required when running in clustered mode. Consists of a single line that contains only the text of that machine’s ID
+      ZOOKEEPER_TICK_TIME: 2000                                                                 #
+    network_mode: "host"
