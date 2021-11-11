@@ -41,7 +41,6 @@ func stratGame(w http.ResponseWriter, req *http.Request) {
 	player := mux.Vars(req)["player"]
 	runGame := mux.Vars(req)["runGame"]
 
-	//conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure(), grpc.WithBlock())
 	conn, err := grpc.Dial(os.Getenv("HOST")+":50051", grpc.WithInsecure(), grpc.WithBlock())
 	//conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
