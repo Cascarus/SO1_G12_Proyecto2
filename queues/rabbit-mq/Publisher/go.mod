@@ -1,4 +1,4 @@
-module rabbit-mq
+module Publisher
 
 go 1.13
 

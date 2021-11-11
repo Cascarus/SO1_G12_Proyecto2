@@ -2,25 +2,15 @@ package main
 import (
 	"fmt"
 	"encoding/json"
-     pub "rabbit-mq/Publisher"
-     tip "rabbit-mq/Modelo"
+     pub "Publisher/Pub"
+     tip "Publisher/Modelo"
     "github.com/gin-gonic/gin"
     "net/http" 	   
-)   
-/*
-type User struct {
-    Name string `json:"full_name"`
-    Age int `json:"age"`
-    Active bool `json:"active"`
-    Log string `json:"log"`
-}
-*/
-
-
-
+	)   
 
 
 func main() {
+    
     fmt.Println("")
     fmt.Println(" ==========================  SERVIDOR  ========================== ")
     fmt.Println("")
@@ -36,6 +26,7 @@ func main() {
              return 
         }else{
             //sms = tip.Mensaje{3001,5,"Game1","001",50,"RabbitMQ"}         
+            sms.Worker = "Rabbit"
             datos, err := json.Marshal(sms) // aqui esta el processo de convertir un string
             if err != nil {
                 panic(err)
@@ -51,7 +42,5 @@ func main() {
         fmt.Printf(" ==========================  Datos Enviados  ========================== ")
     })
     router.Run(":8080")
-  
 
-	
 }
