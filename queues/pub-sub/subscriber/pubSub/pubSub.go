@@ -61,7 +61,7 @@ func PullMsgs() error {
 		newLog:= ts.Log{
 			Request_number: msg.Attributes["request_number"],
 			Game: msg.Attributes["game"],
-			Game_name: msg.Attributes["game_name"],
+			Game_name: msg.Attributes["gamename"],
 			Winner: msg.Attributes["winner"],
 			Players: msg.Attributes["players"],
 			Worker: msg.Attributes["worker"],
