@@ -91,8 +91,8 @@ func juego2(players int) int {
 
 	/*for i := 0; i < 17; i++ {
 		lista[i] = rand.Intn(players) + 1
-		log.Println(lista[i])
-	}*/
+		//log.Println(lista[i])
+	}
 
 	index := rand.Intn(17)
 
@@ -106,8 +106,8 @@ func juego3(players int) int {
 
 	/*for i := 0; i < 11; i++ {
 		lista[i] = rand.Intn(players) + 1
-		log.Println(lista[i])
-	}*/
+		//log.Println(lista[i])
+	}
 
 	num1 := rand.Intn(11)
 	num2 := rand.Intn(11)
@@ -144,9 +144,7 @@ type Mensaje struct {
 }
 
 func sendData(reqNum int, gameID int, game string, ganador int, players int) {
-	URL := "server-pubsub:8080/send"
-
-	log.Println(URL)
+	URL := "http://api-pubsub-deployment:8080/send"
 
 	sms := Mensaje{
 		Request_number: reqNum,
@@ -156,6 +154,8 @@ func sendData(reqNum int, gameID int, game string, ganador int, players int) {
 		Players:        players,
 		Worker:         "",
 	}
+
+	log.Println(sms)
 
 	data, err := json.Marshal(sms)
 	if err != nil {

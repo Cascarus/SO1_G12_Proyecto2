@@ -20,7 +20,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PubSub(w http.ResponseWriter, r *http.Request) {
-	resp, err := http.Get("server-pubsub:8080/pubusb")
+	resp, err := http.Get("http://api-pubsub-deployment:8080/pubsub")
 
 	if err != nil {
 		log.Fatal(err)
@@ -41,6 +41,7 @@ func stratGame(w http.ResponseWriter, req *http.Request) {
 	player := mux.Vars(req)["player"]
 	runGame := mux.Vars(req)["runGame"]
 
+	//conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure(), grpc.WithBlock())
 	conn, err := grpc.Dial(os.Getenv("HOST")+":50051", grpc.WithInsecure(), grpc.WithBlock())
 	//conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
