@@ -4,7 +4,7 @@ services:
 
   go:
     build: ./
-    image: gosubscriber:sub
+    image: gosubscriber:lastest
     container_name: sub
     ports:
       - "8090:8090"
