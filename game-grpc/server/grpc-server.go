@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	pb "game-gRPC/proto"
 	"log"
 	"math/rand"
 	"net"
+	"net/http"
+	"os"
 	"strconv"
 
 	"google.golang.org/grpc"
@@ -52,6 +56,13 @@ func (s *server) StratGame(ctx context.Context, in *pb.GameRequest) (*pb.GameRep
 
 	strMensaje := "El ganador del juego es:" + strconv.Itoa(ganador) + " (idGame:" + strID + ", players:" + strPlayer + ", runGames:" + strRunGames + ")"
 
+	Queue := os.Getenv("SERVICE_TYPE")
+
+	if Queue == "3" {
+		sendData(rand.Intn(10000)+1, intID, strRunGames, ganador, intPlayer)
+	}
+	//
+
 	return &pb.GameReply{Resultado: strMensaje}, nil
 }
 
@@ -80,7 +91,7 @@ func juego2(players int) int {
 
 	for i := 0; i < 17; i++ {
 		lista[i] = rand.Intn(players) + 1
-		log.Println(lista[i])
+		//log.Println(lista[i])
 	}
 
 	index := rand.Intn(17)
@@ -95,7 +106,7 @@ func juego3(players int) int {
 
 	for i := 0; i < 11; i++ {
 		lista[i] = rand.Intn(players) + 1
-		log.Println(lista[i])
+		//log.Println(lista[i])
 	}
 
 	num1 := rand.Intn(11)
@@ -121,4 +132,44 @@ func juego3(players int) int {
 	} else {
 		return lista[index-1]
 	}
+}
+
+type Mensaje struct {
+	Request_number int    `json:"request_number"`
+	Game           int    `json:"game"`
+	Gamename       string `json:"gamename"`
+	Winner         string `json:"winner"`
+	Players        int    `json:"players"`
+	Worker         string `json:"worker"`
+}
+
+func sendData(reqNum int, gameID int, game string, ganador int, players int) {
+	URL := "http://api-pubsub-deployment:8080/send"
+
+	sms := Mensaje{
+		Request_number: reqNum,
+		Game:           gameID,
+		Gamename:       game,
+		Winner:         strconv.Itoa(ganador),
+		Players:        players,
+		Worker:         "",
+	}
+
+	log.Println(sms)
+
+	data, err := json.Marshal(sms)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req, _ := http.NewRequest("POST", URL, bytes.NewBuffer(data))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Print(err)
+	}
+	defer resp.Body.Close()
+
 }
