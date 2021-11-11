@@ -6,7 +6,6 @@ import (
     //"net/http"
 	sub "Suscriber/Sub"
 	"github.com/joho/godotenv"
-	 	   
 	)
 func main(){
 	err := godotenv.Load("e.env")

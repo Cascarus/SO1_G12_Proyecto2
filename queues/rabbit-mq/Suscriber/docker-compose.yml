@@ -1,0 +1,12 @@
+version: "3.9"
+
+services: 
+
+  go:
+    build: ./
+    image: gosubscriber:sub
+    container_name: sub
+    ports:
+      - "8090:8090"
+    volumes:
+      - .:/usr/src/goApp

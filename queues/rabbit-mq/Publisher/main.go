@@ -15,6 +15,11 @@ func main() {
     fmt.Println(" ==========================  SERVIDOR  ========================== ")
     fmt.Println("")
     router := gin.Default()
+
+    router.GET("/rabbit",func(c *gin.Context){
+        c.JSON(http.StatusOK, "Hola desde Rabbit Publisher")
+ 
+    })
     router.POST("/send", func(c *gin.Context) {
         
         var sms  tip.Mensaje  // se declara sms con el tipo de mensaje
