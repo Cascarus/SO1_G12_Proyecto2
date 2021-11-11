@@ -1,0 +1,5 @@
+###
+POST http://localhost:2000/game/3/gameName/juego2/players/53
+Content-Type: "application/json"
+
+{}

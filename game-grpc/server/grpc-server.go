@@ -89,7 +89,7 @@ func juego2(players int) int {
 
 	var lista [17]int
 
-	for i := 0; i < 17; i++ {
+	/*for i := 0; i < 17; i++ {
 		lista[i] = rand.Intn(players) + 1
 		//log.Println(lista[i])
 	}
@@ -104,7 +104,7 @@ func juego3(players int) int {
 
 	var lista [11]int
 
-	for i := 0; i < 11; i++ {
+	/*for i := 0; i < 11; i++ {
 		lista[i] = rand.Intn(players) + 1
 		//log.Println(lista[i])
 	}
