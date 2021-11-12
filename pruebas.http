@@ -3,3 +3,21 @@ POST http://localhost:2000/game/3/gameName/juego2/players/53
 Content-Type: "application/json"
 
 {}
+
+
+### KAFKA GET
+GET http://localhost:3000/kafka
+
+
+###
+POST http://localhost:3000/send
+Content-Type: "application/json"
+
+{
+    "request_number":1500,
+	"game":120,
+	"gamename":"Juego Uno",
+	"winner":"Cambio dos",
+	"players":200,
+	"worker":"Kafka"
+}

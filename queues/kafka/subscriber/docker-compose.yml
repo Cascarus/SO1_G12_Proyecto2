@@ -1,0 +1,25 @@
+version: "3.9"
+
+services: 
+
+  go:
+    build: ./
+    image: kafka:subscriber
+    #ports: 
+    #  - "8080:8080"
+    network_mode: "host"
+    container_name: Ksub
+    volumes:
+      - .:/usr/src/goApp
+    #command: bash -c "go mod init kafka"
+    #command: bash -c "go get github.com/gin-gonic/gin"
+    #command: bash -c "go get github.com/joho/godotenv"
+    #command: bash -c "go get github.com/segmentio/kafka-go"
+    #command: bash -c "go get github.com/go-redis/redis/v8"
+    #command: bash -c "go get go.mongodb.org/mongo-driver/mongo/options"
+    #command: bash -c "go get go.mongodb.org/mongo-driver/mongo"
+    #env_file:
+      #- ./GoApi/env.env
+    #environment:
+      #GOOGLE_APPLICATION_CREDENTALS: ./PK/PS_key.json
+      #GIN_MODE: release
