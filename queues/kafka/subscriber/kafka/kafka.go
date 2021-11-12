@@ -10,6 +10,8 @@ import(
 	"encoding/json"
 	kfk "github.com/segmentio/kafka-go"
 	ts "kafka/types"
+	mongo "kafka/mongo"
+	rds "kafka/redis"
 )
 
 func Read() (error, string) {
@@ -50,6 +52,7 @@ func Read() (error, string) {
 
 func Consume(){
 
+
 	r := kfk.NewReader(kfk.ReaderConfig{
 		Brokers:   []string{os.Getenv("BROKER")},
 		Topic:     os.Getenv("TOPIC"),
@@ -57,7 +60,8 @@ func Consume(){
 		MinBytes:  10e3, // 10KB
 		MaxBytes:  10e6, // 10MB
 	})
-	//r.SetOffset(42)
+	//r.SetOffset(1)
+	rds.CrateClient()
 	
 	for {
 		m, err := r.ReadMessage(context.Background())
@@ -71,6 +75,9 @@ func Consume(){
 			panic(err)
 		}
 		fmt.Println(newLog)
+		mongo.Create(newLog)
+		rds.SetData("winner", newLog.Winner)
+
 		//fmt.Printf("message at offset %d: %s = %s\n", m.Offset, string(m.Key), string(m.Value))
 	}
 	
