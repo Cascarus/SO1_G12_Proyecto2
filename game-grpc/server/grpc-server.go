@@ -58,8 +58,14 @@ func (s *server) StratGame(ctx context.Context, in *pb.GameRequest) (*pb.GameRep
 
 	Queue := os.Getenv("SERVICE_TYPE")
 
-	if Queue == "3" {
-		sendData(rand.Intn(10000)+1, intID, strRunGames, ganador, intPlayer)
+	if Queue == "1" {
+		return &pb.GameReply{Resultado: "llego al grpc de kafka"}, nil
+	} else if Queue == "2" {
+		sendData(rand.Intn(10000)+1, intID, strRunGames, ganador, intPlayer, "http://api-rabbit-deployment:8080/send")
+	} else if Queue == "3" {
+		sendData(rand.Intn(10000)+1, intID, strRunGames, ganador, intPlayer, "http://api-pubsub-deployment:8080/send")
+	} else {
+		return &pb.GameReply{Resultado: "ERROR: NO LLEGO A NADA"}, nil
 	}
 	//
 
@@ -143,9 +149,7 @@ type Mensaje struct {
 	Worker         string `json:"worker"`
 }
 
-func sendData(reqNum int, gameID int, game string, ganador int, players int) {
-	URL := "http://api-pubsub-deployment:8080/send"
-
+func sendData(reqNum int, gameID int, game string, ganador int, players int, url string) {
 	sms := Mensaje{
 		Request_number: reqNum,
 		Game:           gameID,
@@ -162,7 +166,7 @@ func sendData(reqNum int, gameID int, game string, ganador int, players int) {
 		log.Fatal(err)
 	}
 
-	req, _ := http.NewRequest("POST", URL, bytes.NewBuffer(data))
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -171,5 +175,4 @@ func sendData(reqNum int, gameID int, game string, ganador int, players int) {
 		log.Print(err)
 	}
 	defer resp.Body.Close()
-
 }
