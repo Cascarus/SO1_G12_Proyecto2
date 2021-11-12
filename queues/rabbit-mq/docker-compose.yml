@@ -1,0 +1,38 @@
+version: "3.9"
+
+services: 
+
+  gopublisher:
+    build: ./Publisher
+    image: gopublisher1:latest
+    container_name: pub
+    #ports: 
+    #  - "8080:8080"
+    network_mode: "host"
+
+
+  gosuscriber:
+    build: ./Suscriber
+    image: gosubscriber1:latest
+    container_name: sub
+    #ports:
+    # - "8090:8080"
+    network_mode: "host"
+  #rabbitmq:
+    #image: rabbitmq:latest
+    #ports:
+     # - "5672:5672"
+
+  rabbitmq3:
+    container_name: "rabbitmq"
+    image: rabbitmq:3.9-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    #ports:
+      # AMQP protocol port
+      #- '5672:5672'
+      # HTTP management UI
+      #- '15672:15672'
+    network_mode: "host"      
+            
