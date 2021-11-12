@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  kafka:
+      image: confluentinc/cp-kafka:latest
+      container_name: kafka
+      environment:
+        KAFKA_ZOOKEEPER_CONNECT: localhost:32181                                                   #Instructs Kafka how to get in touch with ZooKeeper
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092                                   #Describes how the host name that is advertised and can be reached by clients
+        #KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT                                  #Map between listener names and security protocols. This must be defined for the same security protocol to be usable in more than one port or IP
+        #KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT                                               #Name of listener used for communication between brokers
+        #KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1                                                 # This is required when you are running with a single-node cluster. If you have three or more nodes, you can use the default
+      network_mode: "host"
