@@ -7,7 +7,7 @@ import (
 	"log"
 	"errors"
 	"time"
-	"sync"
+	//"sync"
 	"encoding/json"
 	"cloud.google.com/go/pubsub"
 	"io/ioutil"
@@ -16,9 +16,11 @@ import (
 	
 	rds "pubsub/redis"
 	ts "pubsub/types"
-	mongo "pubsub/mongo"
+	//mongo "pubsub/mongo"
 )
 
+
+var players map[string]int //==> "Efrain": 10
 
 func createClient(ctx context.Context) (*pubsub.Client, error) {
 
@@ -38,6 +40,9 @@ func createClient(ctx context.Context) (*pubsub.Client, error) {
 func PullMsgs() error {
 	// projectID := "my-project-id"
 	// subID := "my-sub"
+
+	players = make(map[string]int)
+
 	rds.CrateClient()
 	ctx := context.Background()
 	
@@ -49,15 +54,15 @@ func PullMsgs() error {
 	defer client.Close()
 
 	// Consume 10 messages.
-	var mu sync.Mutex
+	//var mu sync.Mutex
 	sub := client.Subscription(os.Getenv("SUB"))
 	cctx, cancel := context.WithTimeout(ctx, 3600*time.Second)
 	defer cancel()
 	fmt.Println("Subscriber will close in 3600 Seconds")
 
 	err = sub.Receive(cctx, func(ctx context.Context, msg *pubsub.Message) {
-		mu.Lock()
-		defer mu.Unlock()
+		//mu.Lock()
+		//defer mu.Unlock()
 		newLog:= ts.Log{
 			Request_number: msg.Attributes["request_number"],
 			Game: msg.Attributes["game"],
@@ -66,15 +71,17 @@ func PullMsgs() error {
 			Players: msg.Attributes["players"],
 			Worker: "PubSub",
 		}
-		jsonString, _:=json.Marshal(newLog)
-		fmt.Println("New message", string(jsonString))
-		rds.SetData("Winner", newLog.Winner)
-		result, mongoEr := mongo.Create(newLog)
+		
+		go func(){
+			sendToRedis(newLog)
+		}()
+		
+		/*result, mongoEr := mongo.Create(newLog)
 		if mongoEr!=nil{
 			log.Print(mongoEr)
 		}else{
 			fmt.Println(result)
-		}
+		}*/
 		
 		msg.Ack()
 	})
@@ -82,4 +89,24 @@ func PullMsgs() error {
 		return fmt.Errorf("Receive: %v", err)
 	}
 	return nil
+}
+
+
+func sendToRedis(newLog ts.Log){
+
+	players[newLog.Winner] = players[newLog.Winner]+1
+	data := struct {
+		JuegosGanados int
+		Jugador	string
+		UltimoJuego string
+		Estado string
+	}{
+		players[newLog.Winner],
+		newLog.Winner,
+		newLog.Gamename,
+		"Winner",
+	}		
+
+	jsonString, _:=json.Marshal(data)
+	rds.SetHash(newLog.Winner, string(jsonString))
 }

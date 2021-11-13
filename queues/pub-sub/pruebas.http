@@ -5,8 +5,8 @@ Content-Type: "application/json"
 {
     "request_number":1500,
 	"game":120,
-	"gamename":"Juego Uno",
-	"winner":"Cambio de nombre",
+	"gamename":"Juego Dos",
+	"winner":"Javier",
 	"players":200,
 	"worker":"PubSub"
 }
