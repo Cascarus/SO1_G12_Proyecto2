@@ -12,7 +12,7 @@ func main(){
 	if err!=nil{
 		fmt.Println("Error loading enviroment variables")
 	}else{
-        fmt.Println("=========== SUBSCRIBER LISTENING ===========")
+        fmt.Println("=========== SUSBSCRIER LISTENING ===========")
         sub.Start_suscriber()
     }
 }
