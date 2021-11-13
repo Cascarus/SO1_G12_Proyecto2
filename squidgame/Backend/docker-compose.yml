@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  
+  node:
+    build: ./
+    image: efraalv/squidgame-backend
+    ports:
+      - "3000:3000"
+    volumes:
+        - .:/user/src/app
