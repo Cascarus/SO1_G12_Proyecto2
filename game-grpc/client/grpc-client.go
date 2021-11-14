@@ -36,6 +36,40 @@ func PubSub(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(string(body)))
 }
 
+func Rabbit(w http.ResponseWriter, r *http.Request) {
+	resp, err := http.Get("http://api-rabbit-deployment:8080/rabbit")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.Write([]byte(string(body)))
+}
+
+func Kafka(w http.ResponseWriter, r *http.Request) {
+	resp, err := http.Get("http://api-kafka-deployment:3000/kafka")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.Write([]byte(string(body)))
+}
+
 func stratGame(w http.ResponseWriter, req *http.Request) {
 	game := mux.Vars(req)["game"]
 	player := mux.Vars(req)["player"]
@@ -72,6 +106,8 @@ func main() {
 	router := mux.NewRouter().StrictSlash(false)
 	router.HandleFunc("/", IndexHandler)
 	router.HandleFunc("/pubsub", PubSub)
+	router.HandleFunc("/rabbit", Rabbit)
+	router.HandleFunc("/kafka", Kafka)
 	router.HandleFunc("/game/{game}/gameName/{runGame}/players/{player}", stratGame).Methods("POST")
 	log.Println("Listening on port => 2000")
 	log.Fatal(http.ListenAndServe(":2000", router))
