@@ -6,9 +6,11 @@ import dotenv from 'dotenv';
 // INITIALIZE =====================================
 const app = express();
 import './mongo.js'
+import logSchema from '../models/logs.js'
 dotenv.config();
 import program from './mongoRT.js'
 program()
+//
 //=================================================
 
 
@@ -32,6 +34,12 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use(("hola", async (req, res) => {
+
+    const logs = await logSchema.find({});
+    res.send(logs);
+
+}))
 
 app.use((req, res, next) => {
     res.status(404).send('404 Not Found');
@@ -43,3 +51,33 @@ app.use((req, res, next) => {
 //=================================================
 
 export default app;
+
+
+
+/*
+replication:
+  replSetName: squidgameRS
+
+
+rs.initiate(
+   {
+      _id: "squidgameRS",
+      version: 1,
+      members: [
+         { _id: 0, host : "35.223.125.235:27017" },
+         { _id: 1, host : "0.0.0.0:27017" }
+      ]
+   }
+)
+
+
+rs.initiate(
+   {
+      _id: "squidgameRS",
+      version: 1,
+      members: [
+         { _id: 0, host : "35.223.125.235:27017" }
+      ]
+   }
+)
+*/
