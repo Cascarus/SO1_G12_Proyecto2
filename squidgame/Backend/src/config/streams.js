@@ -1,4 +1,5 @@
 import logSchema from '../models/logs.js'
+import client from './redis.js'
 
 const program = (socket) => {
 
@@ -11,6 +12,9 @@ const program = (socket) => {
     );
 
     changeStream.on('change', (data) => {
+        client.hgetall("players:all", function (err, value) {
+            console.log(value); // > "bar"
+        });
         console.log(data.fullDocument); // You could parse out the needed info and send only that data. 
         //socket.emit("COSMOS", data)
     });

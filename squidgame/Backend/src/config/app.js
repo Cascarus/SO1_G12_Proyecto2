@@ -1,16 +1,15 @@
 import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 
 // INITIALIZE =====================================
 const app = express();
 import './mongo.js'
-import logSchema from '../models/logs.js'
-dotenv.config();
-import program from './mongoRT.js'
+import './redis.js'
+
+import program from './streams.js'
 program()
-//
+
 //=================================================
 
 
@@ -29,20 +28,19 @@ app.use(cors());
 // ROUTES =========================================
 
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+   next();
 });
 
 app.use(("hola", async (req, res) => {
 
-    const logs = await logSchema.find({});
-    res.send(logs);
+   res.send("hola");
 
 }))
 
 app.use((req, res, next) => {
-    res.status(404).send('404 Not Found');
+   res.status(404).send('404 Not Found');
 });
 //=================================================
 
@@ -58,7 +56,6 @@ export default app;
 replication:
   replSetName: squidgameRS
 
-
 rs.initiate(
    {
       _id: "squidgameRS",
@@ -69,7 +66,6 @@ rs.initiate(
       ]
    }
 )
-
 
 rs.initiate(
    {
