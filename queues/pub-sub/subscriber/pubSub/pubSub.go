@@ -16,7 +16,7 @@ import (
 	
 	rds "pubsub/redis"
 	ts "pubsub/types"
-	//mongo "pubsub/mongo"
+	mongo "pubsub/mongo"
 )
 
 
@@ -76,12 +76,12 @@ func PullMsgs() error {
 			sendToRedis(newLog)
 		}()
 		
-		/*result, mongoEr := mongo.Create(newLog)
+		result, mongoEr := mongo.Create(newLog)
 		if mongoEr!=nil{
 			log.Print(mongoEr)
 		}else{
 			fmt.Println(result)
-		}*/
+		}
 		
 		msg.Ack()
 	})
