@@ -74,6 +74,7 @@ func Consume(){
 		if err != nil {
 			panic(err)
 		}
+		newLog.Worker = "kafka"
 		fmt.Println(newLog)
 		mongo.Create(newLog)
 		rds.SetData("winner", newLog.Winner)
