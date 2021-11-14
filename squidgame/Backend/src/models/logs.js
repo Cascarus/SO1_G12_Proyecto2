@@ -10,4 +10,4 @@ const LogSchema = new Schema({
     worker: { type: String, required: true }
 });
 
-export default model('Logs', LogSchema);
+export default model('games', LogSchema);
