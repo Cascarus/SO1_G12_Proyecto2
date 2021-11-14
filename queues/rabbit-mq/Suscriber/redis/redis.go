@@ -29,6 +29,8 @@ func SetData(key, value string){
     }
 }
 
+
+
 func getData(key string){
 
     val, err := rdb.Get(ctx, key).Result()
@@ -39,5 +41,18 @@ func getData(key string){
     } else {
         fmt.Println(key,": ", val)
     }
+}
+
+
+
+func SetHash(player, value string){
+
+    num := rdb.HSet(ctx, "players:all", player, value)
+    fmt.Println(num)
 
 }
+
+
+
+
+
