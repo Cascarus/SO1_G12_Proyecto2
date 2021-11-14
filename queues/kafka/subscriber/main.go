@@ -3,6 +3,7 @@ package main
 import(
 	"fmt"
 	//"log"
+	"time"
 	"github.com/joho/godotenv"
 	k "kafka/kafka"
 )
@@ -17,7 +18,12 @@ func main(){
 
 		fmt.Println("=========== CONSUMER LISTENING ===========")
 
-		k.Consume()
+		finish:=k.Consume()
+		for finish=="done"{
+			fmt.Println(" ***** RETRYING IN 3s ***** ")
+			time.Sleep(3*time.Second)
+			finish=k.Consume()
+		}
 		/*err, res := k.Consume()
 		if err != nil{
 			log.Print(err)
@@ -28,5 +34,4 @@ func main(){
 
 
 	fmt.Println("")
-
 }

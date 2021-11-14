@@ -50,7 +50,7 @@ func Read() (error, string) {
 
 
 
-func Consume(){
+func Consume() string{
 
 
 	r := kfk.NewReader(kfk.ReaderConfig{
@@ -85,4 +85,5 @@ func Consume(){
 		log.Print("failed to close reader:", err)
 	}
 
+	return "done"
 }

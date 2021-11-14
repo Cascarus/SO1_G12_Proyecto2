@@ -5,6 +5,7 @@ import(
 	"net/http"
 	"log"
 	"os"
+	"time"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
@@ -38,6 +39,20 @@ func publish(c *gin.Context){
 }
 
 
+func initTopic() {
+
+	err:=k.CreteTopic(os.Getenv("TOPIC"))
+	if err !=nil{
+		log.Print(err)
+		fmt.Println(" ******* RETRYING IN 3s ******* ")
+		time.Sleep(3*time.Second)
+		initTopic()
+	}else{
+		k.ListTopics()
+	}
+}
+
+
 func main(){
 
 	err := godotenv.Load("e.env")
@@ -46,12 +61,7 @@ func main(){
 	}
 
 	fmt.Println("============================== CREATING TOPIC ==============================")
-	err=k.CreteTopic(os.Getenv("TOPIC"))
-	if err !=nil{
-		log.Print(err)
-	}else{
-		k.ListTopics()
-	}
+		initTopic()
 	fmt.Println("============================================================================")
 
 	router := gin.Default()
