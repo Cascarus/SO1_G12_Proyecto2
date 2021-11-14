@@ -47,3 +47,36 @@ func Start_suscription(body string) {
 
         log.Printf(" [x] Sent %s", body)
 }
+
+
+/*db.games.find({})
+db.games.insertOne(
+        {
+                "request_number" : "8478", 
+                "game" : "12", 
+                "gamename" : "testRabbit", 
+                "winner" : "1", 
+                "players" : "1", 
+                "worker" : "PubSub"
+        }
+)
+
+
+db.games.aggregate( [
+        { $group: { _id: "$game" },
+        { $count: {}}
+     ] );
+
+
+db.games.aggregate([
+        {
+        $group: {
+        _id: "$game",
+        cantidad: {
+                $count: {}
+                }
+        }
+        },
+        {$sort: { cantidad: -1 }},
+        { $limit: 3 }
+]);*/
