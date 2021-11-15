@@ -12,10 +12,10 @@ const NavBar = function () {
                     </div>
                     <div id="mainListDiv" className="main_list">
                         <ul className="navlinks">
-                            <li><a href="/">Players</a></li>
-                            <li><a href="/">Games</a></li>
-                            <li><a href="/">Logs</a></li>
-                            <li><a href="/">Workers</a></li>
+                            <li><a href="/players">Players</a></li>
+                            <li><a href="/games">Games</a></li>
+                            <li><a href="/logs">Logs</a></li>
+                            <li><a href="/workers">Workers</a></li>
                         </ul>
                     </div>
                     <span className="navTrigger">

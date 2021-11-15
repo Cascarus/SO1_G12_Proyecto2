@@ -3,6 +3,7 @@ import NavBar from './components/navbar'
 import './bootstrap.min.css'
 import Home from './components/home';
 import Players from './views/players';
+import Workers from './views/workers';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
 
         <Route exact path="/" element={<Home />} />
         <Route exact path="/players" element={<Players />} />
+        <Route exact path="/workers" element={<Workers />} />
 
       </Routes>
     </BrowserRouter>
