@@ -9,7 +9,7 @@ import(
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	ts "Suscriber/type"
+//	ts "Suscriber/type"
 )
 
 
@@ -39,7 +39,7 @@ func Connect() (*mongo.Client, error) {
 
 
 // creates a todo
-func Create(log ts.Log) (string, error) {
+func Create(log interface {}, collection string) (string, error) {
 
 	c, err := Connect()
     
@@ -51,7 +51,7 @@ func Create(log ts.Log) (string, error) {
     ctx := context.Background()
     defer c.Disconnect(ctx)
 
-    todoCollection := c.Database("squidgame").Collection("games")
+    todoCollection := c.Database("squidgame").Collection(collection)
     r, err := todoCollection.InsertOne(ctx, log)
     if err != nil {
         return "", errors.New("Failed to load Log")

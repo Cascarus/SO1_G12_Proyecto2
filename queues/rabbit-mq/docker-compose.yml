@@ -18,7 +18,9 @@ services:
     #ports:
     # - "8090:8080"
     network_mode: "host"
-  #rabbitmq:
+    volumes:
+      - ./Suscriber:/usr/src/goApp
+    #rabbitmq:
     #image: rabbitmq:latest
     #ports:
      # - "5672:5672"
