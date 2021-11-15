@@ -1,5 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import NavBar from './components/navbar';
+import NavBar from './components/navbar'
+import './bootstrap.min.css'
+import Home from './components/home';
+import Players from './views/players';
 
 
 function App() {
@@ -8,7 +11,8 @@ function App() {
       <NavBar />
       <Routes>
 
-        <Route path="hola" element={<NavBar />} />
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/players" element={<Players />} />
 
       </Routes>
     </BrowserRouter>
