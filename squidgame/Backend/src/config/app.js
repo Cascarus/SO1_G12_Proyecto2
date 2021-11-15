@@ -51,29 +51,34 @@ app.use((req, res, next) => {
 export default app;
 
 
-
-/*
-replication:
-  replSetName: squidgameRS
-
-rs.initiate(
-   {
-      _id: "squidgameRS",
-      version: 1,
-      members: [
-         { _id: 0, host : "35.223.125.235:27017" },
-         { _id: 1, host : "0.0.0.0:27017" }
-      ]
-   }
+/*db.games.find({})
+db.games.insertOne(
+        {
+                "request_number" : "8478",
+                "game" : "12",
+                "gamename" : "testRabbit",
+                "winner" : "1",
+                "players" : "1",
+                "worker" : "PubSub"
+        }
 )
 
-rs.initiate(
-   {
-      _id: "squidgameRS",
-      version: 1,
-      members: [
-         { _id: 0, host : "35.223.125.235:27017" }
-      ]
-   }
-)
-*/
+
+db.games.aggregate( [
+        { $group: { _id: "$game" },
+        { $count: {}}
+     ] );
+
+
+db.games.aggregate([
+        {
+        $group: {
+        _id: "$game",
+        cantidad: {
+                $count: {}
+                }
+        }
+        },
+        {$sort: { cantidad: -1 }},
+        { $limit: 3 }
+]);*/
