@@ -70,6 +70,7 @@ func Consume() string{
 		}
 
 		var newLog ts.Log
+		newLog.Worker = "kafka"
 		err = json.Unmarshal(m.Value, &newLog)
 		if err != nil {
 			panic(err)

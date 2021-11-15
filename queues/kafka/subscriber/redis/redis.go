@@ -41,3 +41,10 @@ func getData(key string){
     }
 
 }
+
+func SetHash(player, value string){
+
+    num := rdb.HSet(ctx, "players:all", player, value)
+    fmt.Println(num)
+
+}
