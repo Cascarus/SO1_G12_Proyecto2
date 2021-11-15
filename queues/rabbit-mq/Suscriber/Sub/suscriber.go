@@ -10,7 +10,7 @@ import (
         mongo "Suscriber/mongo"
 
 )
-
+var players map[string]int //==> "Efrain": 10
 func failOnError(err error, msg string) {
         if err != nil {
                 log.Fatalf("%s: %s", msg, err)
@@ -20,6 +20,7 @@ func failOnError(err error, msg string) {
 func Start_suscriber() {
 
         rds.CrateClient()
+        players = make(map[string]int)
 	//ctx := context.Background()
         /*
 	if err != nil {
@@ -84,8 +85,13 @@ func Start_suscriber() {
                         if err := json.Unmarshal(d.Body, &newLog); err != nil {
                                 panic(err)
                         }
-                        rds.SetData("Winner", newLog.Winner)
                         fmt.Println("New message", newLog.Request_number)    
+                        go func(){
+                                sendToRedis(newLog)
+                        }()  
+                        /*
+                        fmt.Println("New message", newLog.Request_number)    
+                        */
                         result, mongoEr := mongo.Create(newLog)
 		        if mongoEr!=nil{
 			 log.Print(mongoEr)
@@ -100,3 +106,24 @@ func Start_suscriber() {
         log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
         <-forever
 }
+
+
+func sendToRedis(newLog ts.Log){
+
+	players[newLog.Winner] = players[newLog.Winner]+1
+	data := struct {
+		JuegosGanados int
+		Jugador	string
+		UltimoJuego string
+		Estado string
+	}{
+		players[newLog.Winner],
+		newLog.Winner,
+		newLog.Gamename,
+		"Winner",
+	}		
+
+	jsonString, _:=json.Marshal(data)
+	rds.SetHash(newLog.Winner, string(jsonString))
+}
+
