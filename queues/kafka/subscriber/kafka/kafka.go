@@ -14,6 +14,8 @@ import(
 	rds "kafka/redis"
 )
 
+var players map[string]int //==> "Efrain": 10
+
 func Read() (error, string) {
 	
 	conn, err := kfk.DialLeader(context.Background(), "tcp", os.Getenv("BROKER"), os.Getenv("TOPIC"), 0)
@@ -52,6 +54,7 @@ func Read() (error, string) {
 
 func Consume() string{
 
+	players = make(map[string]int)
 
 	r := kfk.NewReader(kfk.ReaderConfig{
 		Brokers:   []string{os.Getenv("BROKER")},
@@ -70,14 +73,17 @@ func Consume() string{
 		}
 
 		var newLog ts.Log
-		newLog.Worker = "kafka"
 		err = json.Unmarshal(m.Value, &newLog)
+		newLog.Worker = "kafka"
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(newLog)
-		mongo.Create(newLog)
-		rds.SetData("winner", newLog.Winner)
+
+		go func(){
+			sendToRedis(newLog)
+		}()
+		mongo.Create(newLog, "games") 			// ---> Send to Games collection
+		
 
 		//fmt.Printf("message at offset %d: %s = %s\n", m.Offset, string(m.Key), string(m.Value))
 	}
@@ -87,4 +93,25 @@ func Consume() string{
 	}
 
 	return "done"
+}
+
+
+func sendToRedis(newLog ts.Log){
+
+	players[newLog.Winner] = players[newLog.Winner]+1
+	data := struct {
+		JuegosGanados int
+		Jugador	string
+		UltimoJuego string
+		Estado string
+	}{
+		players[newLog.Winner],
+		newLog.Winner,
+		newLog.Gamename,
+		"Winner",
+	}		
+
+	jsonString, _:=json.Marshal(data)
+	rds.SetHash(newLog.Winner, string(jsonString))
+	mongo.Create(data, "players") 			// ---> Send to Players collection
 }
