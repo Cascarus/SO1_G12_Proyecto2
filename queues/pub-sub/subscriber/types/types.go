@@ -2,11 +2,11 @@ package types
 
 type Log struct {
 
-    Request_number string `json:"request_number"`
-	Game string `json:"game"`
+    Request_number int `json:"request_number"`
+	Game int `json:"game"`
 	Gamename string `json:"gamename"`
 	Winner string `json:"winner"`
-	Players string `json:"players"`
+	Players int `json:"players"`
 	Worker string `json:"worker"`
 
 }

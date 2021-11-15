@@ -8,6 +8,7 @@ import (
 	"errors"
 	"time"
 	//"sync"
+	"strconv"
 	"encoding/json"
 	"cloud.google.com/go/pubsub"
 	"io/ioutil"
@@ -16,7 +17,7 @@ import (
 	
 	rds "pubsub/redis"
 	ts "pubsub/types"
-	//mongo "pubsub/mongo"
+	mongo "pubsub/mongo"
 )
 
 
@@ -63,12 +64,16 @@ func PullMsgs() error {
 	err = sub.Receive(cctx, func(ctx context.Context, msg *pubsub.Message) {
 		//mu.Lock()
 		//defer mu.Unlock()
+
+		rn,_:=strconv.ParseInt(msg.Attributes["request_number"], 10, 64)
+		g,_:=strconv.ParseInt(msg.Attributes["game"], 10, 64)
+		p,_:=strconv.ParseInt(msg.Attributes["players"], 10, 64)
 		newLog:= ts.Log{
-			Request_number: msg.Attributes["request_number"],
-			Game: msg.Attributes["game"],
-			Gamename: msg.Attributes["gamename"],
+			Request_number: int(rn), //onv.ParseInt("-42", 10, 64)
+			Game: int(g),
+			Gamename: msg.Attributes["gamename"], //strconv.ParseInt(message.Guardados),
 			Winner: msg.Attributes["winner"],
-			Players: msg.Attributes["players"],
+			Players: int(p),
 			Worker: "PubSub",
 		}
 		
@@ -76,12 +81,7 @@ func PullMsgs() error {
 			sendToRedis(newLog)
 		}()
 		
-		/*result, mongoEr := mongo.Create(newLog)
-		if mongoEr!=nil{
-			log.Print(mongoEr)
-		}else{
-			fmt.Println(result)
-		}*/
+		mongo.Create(newLog, "games")
 		
 		msg.Ack()
 	})
@@ -109,4 +109,5 @@ func sendToRedis(newLog ts.Log){
 
 	jsonString, _:=json.Marshal(data)
 	rds.SetHash(newLog.Winner, string(jsonString))
+	mongo.Create(data, "players")
 }
