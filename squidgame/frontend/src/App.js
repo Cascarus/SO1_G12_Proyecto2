@@ -4,6 +4,7 @@ import './bootstrap.min.css'
 import Home from './components/home';
 import Players from './views/players';
 import Workers from './views/workers';
+import Games from './views/games';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/players" element={<Players />} />
         <Route exact path="/workers" element={<Workers />} />
+        <Route exact path="/games" element={<Games />} />
 
       </Routes>
     </BrowserRouter>

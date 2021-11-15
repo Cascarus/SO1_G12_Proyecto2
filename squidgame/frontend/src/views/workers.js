@@ -8,13 +8,13 @@ class Workers extends Component {
         super(props);
         this.state = {
             count: 1,
-            series: [0],
+            counts: [0, 0, 0],
             kafka: [0],
             rabbit: [0],
             pubsub: [0],
-            countPubSub: 33,
-            countRabbit: 33,
-            countKafka: 33
+            countPubSub: 0,
+            countRabbit: 0,
+            countKafka: 0
         }
 
         this.addToWorker = this.addToWorker.bind(this)
@@ -35,35 +35,40 @@ class Workers extends Component {
 
         if (split <= 0.33) {
 
-            this.state.countKafka += 1;
+            let t = this.state.countKafka + 1
+
             this.setState({
                 pubsub: [...this.state.pubsub, 0],
-                kafka: [...this.state.kafka, count],
+                kafka: [...this.state.kafka, t],
                 rabbit: [...this.state.rabbit, 0],
+                countKafka: t,
                 count: count
             })
         }
         else if (split <= 0.66) {
 
-            this.state.countRabbit += 1;
+            let t = this.state.countRabbit + 1
+
             this.setState({
                 pubsub: [...this.state.pubsub, 0],
                 kafka: [...this.state.kafka, 0],
-                rabbit: [...this.state.rabbit, count],
+                rabbit: [...this.state.rabbit, t],
+                countRabbit: t,
                 count: count
             })
         }
         else {
-            this.state.countPubSub += 1;
+
+            let t = this.state.countPubSub + 1
+
             this.setState({
-                pubsub: [...this.state.pubsub, count],
+                pubsub: [...this.state.pubsub, t],
                 kafka: [...this.state.kafka, 0],
                 rabbit: [...this.state.rabbit, 0],
+                countPubSub: t,
                 count: count
             })
         }
-
-        console.log(this.state)
     }
 
     render() {
@@ -80,13 +85,13 @@ class Workers extends Component {
                 <div className="row">
 
                     <div className="col">
-                        <div className="card card-body">
-                            <div className="card-header">
+                        <div className="card card-body" >
+                            <div className="card-header bg-primary">
                                 <p className="h1" style={{ fontSize: "30px" }}>
                                     Google Pub/Sub
                                 </p>
                             </div>
-                            <div className="card-body">
+                            <div className="card-body d-flex justify-content-evenly">
 
                                 <div key={Math.random()}>
                                     <LinealGraph data={this.state.pubsub} height={200} width={500} max={100} />
@@ -97,14 +102,14 @@ class Workers extends Component {
                         </div>
                     </div>
 
-                    <div className="col">
+                    <div className="col ">
                         <div className="card card-body">
-                            <div className="card-header">
+                            <div className="card-header bg-success">
                                 <p className="h1" style={{ fontSize: "30px" }}>
                                     kafka
                                 </p>
                             </div>
-                            <div className="card-body">
+                            <div className="card-body d-flex justify-content-evenly">
 
                                 <div key={Math.random()}>
                                     <LinealGraph data={this.state.kafka} height={200} width={500} max={100} />
@@ -117,12 +122,12 @@ class Workers extends Component {
 
                     <div className="col">
                         <div className="card card-body">
-                            <div className="card-header">
-                                <p className="h1" style={{ fontSize: "30px" }}>
+                            <div className="card-header bg-warning">
+                                <p className="h1" style={{ fontSize: "30px", color: "black" }}>
                                     Rabiit MQ
                                 </p>
                             </div>
-                            <div className="card-body">
+                            <div className="card-body d-flex justify-content-evenly">
 
                                 <div key={Math.random()}>
                                     <LinealGraph data={this.state.rabbit} height={200} width={500} max={100} />
@@ -135,20 +140,44 @@ class Workers extends Component {
 
                 </div>
 
-                <div className="card" style={{ backgroundColor: "#126324", marginTop: "25px" }}>
+                <div className="card" style={{ marginTop: "25px", backgroundColor: "#0f2537" }}>
 
-                    <div className="row">
+                    <div className="row" style={{ paddingLeft: "50px", paddingRight: "50px" }}>
 
-                        <div className="col">
+                        <div className="col d-flex justify-content-evenly" style={{ paddingTop: "30px" }}>
                             <div key={Math.random()}>
                                 <DonutChart
                                     series={
                                         [this.state.countKafka / this.state.count,
                                         this.state.countPubSub / this.state.count,
                                         this.state.countRabbit / this.state.count]}
-                                    width={300}
+                                    width={500}
                                 />
                             </div>
+                        </div>
+
+                        <div className="col" >
+
+
+                            <div className="row alert alert-primary" >
+                                <h1 className="alert-heading" style={{ fontSize: 30 }} >Google Pub/Sub</h1>
+                                <hr />
+                                <p className="h1" style={{ fontSize: 40 }} > {this.state.countPubSub} </p>
+                            </div>
+
+                            <div className="row alert alert-success" >
+                                <h1 className="alert-heading" style={{ fontSize: 30 }} >Kafka</h1>
+                                <hr />
+                                <p className="h1" style={{ fontSize: 40 }} > {this.state.countKafka} </p>
+                            </div>
+
+                            <div className="row alert alert-warning" style={{ color: "black" }} >
+                                <h1 className="alert-heading" style={{ fontSize: 30 }} >Rabbit MQ</h1>
+                                <hr />
+                                <p className="h1" style={{ fontSize: 40 }} > {this.state.countRabbit} </p>
+                            </div>
+
+
                         </div>
 
                     </div>
