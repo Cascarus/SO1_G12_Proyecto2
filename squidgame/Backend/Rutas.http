@@ -1,0 +1,15 @@
+###
+GET http://localhost:3000/Top3Juegos
+###
+
+GET http://localhost:3000/MostrarInsersion
+###
+
+GET http://localhost:3000/Ultimo10_Juegos
+###
+
+GET http://localhost:3000/MostrarDatos
+###
+
+GET http://localhost:3000/AgruparJugadores
+
