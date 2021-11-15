@@ -59,7 +59,7 @@ func (s *server) StratGame(ctx context.Context, in *pb.GameRequest) (*pb.GameRep
 	Queue := os.Getenv("SERVICE_TYPE")
 
 	if Queue == "1" {
-		return &pb.GameReply{Resultado: "llego al grpc de kafka"}, nil
+		sendData(rand.Intn(10000)+1, intID, strRunGames, ganador, intPlayer, "http://api-kafka-deployment:3000/send")
 	} else if Queue == "2" {
 		sendData(rand.Intn(10000)+1, intID, strRunGames, ganador, intPlayer, "http://api-rabbit-deployment:8080/send")
 	} else if Queue == "3" {
