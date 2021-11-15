@@ -92,7 +92,7 @@ func Start_suscriber() {
                         /*
                         fmt.Println("New message", newLog.Request_number)    
                         */
-                        result, mongoEr := mongo.Create(newLog)
+                        result, mongoEr := mongo.Create(newLog,"games")
 		        if mongoEr!=nil{
 			 log.Print(mongoEr)
 		        }else{
@@ -125,5 +125,9 @@ func sendToRedis(newLog ts.Log){
 
 	jsonString, _:=json.Marshal(data)
 	rds.SetHash(newLog.Winner, string(jsonString))
+        mongo.Create(data, "players")
+
+
+
 }
 
