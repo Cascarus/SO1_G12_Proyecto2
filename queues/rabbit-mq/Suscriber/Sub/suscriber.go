@@ -125,7 +125,8 @@ func sendToRedis(newLog ts.Log){
 
 	jsonString, _:=json.Marshal(data)
 	rds.SetHash(newLog.Winner, string(jsonString))
-        mongo.Create(data, "players")
+        fmt.Println(data)
+	mongo.Create(data, "players")
 
 
 
