@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 require('dotenv').config();
 const url = process.env.MONGO_CS;
 module.exports = {
-    
+/*    
     MostrarDatos:function (req,res){
         MongoClient.connect(url,function(err, db){
            if (err) throw err;
@@ -71,7 +71,7 @@ module.exports = {
     }
     
 
-
+*/
 
     
 

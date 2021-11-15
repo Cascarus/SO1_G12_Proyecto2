@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-
+import Groutes from '../routes/Games.js'
 // INITIALIZE =====================================
 const app = express();
 import './mongo.js'
@@ -40,6 +40,9 @@ app.use(("hola", async (req, res) => {
     res.send(logs);
 
 }))
+
+app.use(Groutes)
+
 
 app.use((req, res, next) => {
     res.status(404).send('404 Not Found');
