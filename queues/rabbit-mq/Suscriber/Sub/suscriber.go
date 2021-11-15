@@ -8,16 +8,20 @@ import (
 	ts "Suscriber/type"
         "encoding/json"
         mongo "Suscriber/mongo"
-
+        
 )
+
 var players map[string]int //==> "Efrain": 10
 func failOnError(err error, msg string) {
         if err != nil {
-                log.Fatalf("%s: %s", msg, err)
+                log.Print(msg, err)
         }
 }
 
-func Start_suscriber() {
+
+
+
+func Start_suscriber()string {
 
         rds.CrateClient()
         players = make(map[string]int)
@@ -30,11 +34,18 @@ func Start_suscriber() {
         */
         conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
         failOnError(err, "Failed to connect to RabbitMQ")
+        if err !=nil {
+                return "ok"  
+        }
         defer conn.Close()
 
         ch, err := conn.Channel()
         failOnError(err, "Failed to open a channel")
+        if err !=nil {
+                return "ok"  
+        }
         defer ch.Close()
+
 
         err = ch.ExchangeDeclare(
                 "logs",   // name
@@ -105,6 +116,9 @@ func Start_suscriber() {
              
         log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
         <-forever
+        log.Print("============suscriber========")
+	
+        return "ok"
 }
 
 
