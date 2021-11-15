@@ -1,6 +1,7 @@
 
 const database = require('./database.js');
-//database.Top3() 
+database.JuegoTop3() 
+database.MostrarInsersion()
 database.MostrarDatos()
 
 /***Rabbit*** */
