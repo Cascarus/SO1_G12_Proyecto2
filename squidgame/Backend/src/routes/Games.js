@@ -3,7 +3,7 @@ import { Top3Juegos } from "../services/Games.js";
 const router = Router();
 
 
-router.get('/Top3Juegos',Top3Juegos)
+router.get('/Top3Juegos', Top3Juegos)
 
 // ruta  /Juegostop3
 // ruta  /Logs   //todos los datos 

@@ -29,23 +29,23 @@ app.use(cors());
 // ROUTES =========================================
 
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+   next();
 });
 
-app.use(("hola", async (req, res) => {
+app.use("/hola", async (req, res) => {
 
-    const logs = await logSchema.find({});
-    res.send(logs);
+   const logs = await logSchema.find({});
+   res.send(logs);
 
-}))
+})
 
 app.use(Groutes)
 
 
 app.use((req, res, next) => {
-    res.status(404).send('404 Not Found');
+   res.status(404).send('404 Not Found');
 });
 //=================================================
 
