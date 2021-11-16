@@ -135,11 +135,11 @@ class Games extends Component {
                                     return (
                                         <tr>
                                             <td style={{ fontSize: "25px" }}> {g.request_number} </td>
-                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
-                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
-                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
-                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
-                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.game} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.gamename} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.winner} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.players} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.worker} </td>
                                         </tr>
                                     )
                                 })
