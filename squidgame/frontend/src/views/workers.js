@@ -1,6 +1,11 @@
 import { Component, Fragment } from 'react'
 import DonutChart from '../components/donutGraph';
 import LinealGraph from '../components/linealGraph';
+import socketIOClient from 'socket.io-client';
+
+import HOST from '../HOST'
+
+const socket = socketIOClient(HOST);
 
 class Workers extends Component {
 
@@ -8,32 +13,53 @@ class Workers extends Component {
         super(props);
         this.state = {
             count: 1,
-            counts: [0, 0, 0],
             kafka: [0],
             rabbit: [0],
             pubsub: [0],
-            countPubSub: 0,
-            countRabbit: 0,
-            countKafka: 0
+            countPubSub: 0, //
+            countRabbit: 0, //
+            countKafka: 0 //
         }
 
         this.addToWorker = this.addToWorker.bind(this)
     }
 
-    addToWorker() {
+    componentDidMount() {
+
+        socket.on("squidgame:front", (data) => {
+            this.addToWorker(data.games.worker)
+            //console.log(this.state)
+            //430: "{\"JuegosGanados\":24,\"Jugador\":\"430\",\"UltimoJuego\":\"call of duty\",\"Estado\":\"Winner\"}"
+        });
+
+        /*axios.get(HOST + '/MostrarInsersion')
+            .then((res) => {
+                this.setState({
+                    countKafka: res.data[0].Count,
+                    countPubSub: res.data[1].Count,
+                    countRabbit: res.data[2].Count,
+
+                })
+                console.log(res.data)
+            })
+            .catch(() => {
+
+            })*/
+
+    }
+
+    addToWorker(worker) {
 
         var count = this.state.count + 1
 
-        if (count / 10 >= 1) {
+        if (count / 10 >= 2) {
 
             this.state.pubsub.shift()
             this.state.kafka.shift()
             this.state.rabbit.shift()
         }
 
-        var split = Math.random()
-
-        if (split <= 0.33) {
+        if (worker === "kafka") {
 
             let t = this.state.countKafka + 1
 
@@ -45,7 +71,7 @@ class Workers extends Component {
                 count: count
             })
         }
-        else if (split <= 0.66) {
+        else if (worker === "Rabbit") {
 
             let t = this.state.countRabbit + 1
 
@@ -94,7 +120,7 @@ class Workers extends Component {
                             <div className="card-body d-flex justify-content-evenly">
 
                                 <div key={Math.random()}>
-                                    <LinealGraph data={this.state.pubsub} height={200} width={500} max={100} />
+                                    <LinealGraph data={this.state.pubsub} height={200} width={500} max={this.state.countPubSub + 10} />
                                 </div>
 
                             </div>
@@ -112,7 +138,7 @@ class Workers extends Component {
                             <div className="card-body d-flex justify-content-evenly">
 
                                 <div key={Math.random()}>
-                                    <LinealGraph data={this.state.kafka} height={200} width={500} max={100} />
+                                    <LinealGraph data={this.state.kafka} height={200} width={500} max={this.state.countKafka + 10} />
                                 </div>
 
                             </div>
@@ -130,7 +156,7 @@ class Workers extends Component {
                             <div className="card-body d-flex justify-content-evenly">
 
                                 <div key={Math.random()}>
-                                    <LinealGraph data={this.state.rabbit} height={200} width={500} max={100} />
+                                    <LinealGraph data={this.state.rabbit} height={200} width={500} max={this.state.countRabbit + 10} />
                                 </div>
 
                             </div>
@@ -148,8 +174,8 @@ class Workers extends Component {
                             <div key={Math.random()}>
                                 <DonutChart
                                     series={
-                                        [this.state.countKafka / this.state.count,
-                                        this.state.countPubSub / this.state.count,
+                                        [this.state.countPubSub / this.state.count,
+                                        this.state.countKafka / this.state.count,
                                         this.state.countRabbit / this.state.count]}
                                     width={500}
                                 />

@@ -1,5 +1,4 @@
 import { Component, Fragment } from "react";
-import axios from 'axios';
 import socketIOClient from 'socket.io-client';
 
 import HOST from "../HOST";
@@ -26,20 +25,17 @@ class Players extends Component {
     componentDidMount() {
 
         socket.on("squidgame:front", (data) => {
-            console.log(data)
+            this.convertToArray(data.players)
+            //430: "{\"JuegosGanados\":24,\"Jugador\":\"430\",\"UltimoJuego\":\"call of duty\",\"Estado\":\"Winner\"}"
         });
 
-        axios.get(HOST + "/AgruparJugadores")
+        /*axios.get(HOST + "/AgruparJugadores")
             .then((res) => {
                 this.setState({ topPlayers: res.data })
             })
             .catch((err) => {
                 console.log(err)
-            })
-
-
-        this.convertToArray({})
-
+            })*/
     }
 
     convertToArray(data) {
@@ -48,10 +44,12 @@ class Players extends Component {
         var temp1 = temp.map(([key, value]) => {
             return {
                 player: key,
-                data: value
+                data: JSON.parse(value)
             }
         })
-        this.setState({ players: temp1 })
+        var temp2 = [...temp1]
+        this.setState({ players: temp1, topPlayers: temp2.splice(0, 9) })
+
     }
 
     selectPlayer() {
@@ -80,15 +78,15 @@ class Players extends Component {
                                     {
                                         this.state.topPlayers.map((p) => {
                                             return (
-                                                <div>
+                                                <div key={"top" + p.player}>
                                                     <div className="card-header">
                                                         <h1>
-                                                            Player #{p._id}
+                                                            Player #{p.player}
                                                         </h1>
                                                     </div>
                                                     <div className="card-body">
                                                         <h1>
-                                                            Victorias {p.JuegosGanado}
+                                                            Victorias {p.data.JuegosGanados}
                                                         </h1>
                                                     </div>
                                                 </div>
@@ -104,12 +102,12 @@ class Players extends Component {
                             {
                                 this.state.players.map((p) => {
                                     return (
-                                        <div className="fluid-container card card-body" style={{ borderStyle: "solid", borderColor: "white", borderRadius: "5px", backgroundColor: "#1a4a24", marginBottom: "20px" }}>
+                                        <div key={p.player} className="fluid-container card card-body" style={{ borderStyle: "solid", borderColor: "white", borderRadius: "5px", backgroundColor: "#1a4a24", marginBottom: "20px" }}>
                                             <div className="row">
                                                 <div className="col-3">
                                                     <div className="btn btn-outline-success" style={{ borderColor: "black", borderStyle: "solid", textAlign: "center" }} onClick={() => this.selectPlayer()}>
                                                         <strong>
-                                                            <p className="h1" style={{ fontSize: "60px", color: "white" }} > {p.jugador} </p>
+                                                            <p className="h1" style={{ fontSize: "60px", color: "white" }} > {p.player} </p>
                                                         </strong>
                                                     </div>
                                                 </div>
@@ -118,14 +116,14 @@ class Players extends Component {
                                                         <div className="col" style={{ textAlign: "center" }}>
                                                             <h3><i>Ultimo Juego</i></h3>
                                                             <p className="h1" style={{ fontSize: "50px" }}>
-                                                                {p.ultimojuego}
+                                                                {p.data.UltimoJuego}
                                                             </p>
                                                         </div>
                                                         <div className="col" style={{ textAlign: "center" }}>
                                                             <h3><i>Juegos ganados</i></h3>
                                                             <div className="card card body bg-danger">
                                                                 <p className="h1" style={{ fontSize: "50px" }}>
-                                                                    {p.juegosganados}
+                                                                    {p.data.JuegosGanados}
                                                                 </p>
                                                             </div>
                                                         </div>

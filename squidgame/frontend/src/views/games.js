@@ -12,7 +12,6 @@ class Games extends Component {
     componentDidMount() {
 
 
-
     }
 
     render() {

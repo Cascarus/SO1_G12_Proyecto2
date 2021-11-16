@@ -3,6 +3,7 @@ import client from './redis.js'
 
 const program = (socket) => {
 
+
     const changeStream = logSchema.watch(
         [
             { $match: { "operationType": { $in: ["insert", "update", "replace"] } } },
@@ -11,14 +12,15 @@ const program = (socket) => {
         { fullDocument: "updateLookup" }
     );
 
+    changeStream.on('change', async (data) => {
 
-    changeStream.on('change', (data) => {
-        var players;
         client.hgetall("players:all", function (err, value) {
-            //console.log(value); // > "bar"
-            players = value
-        });
-        socket.emit("squidgame", { games: data.fullDocument, players: players })
+            console.log(value); // > "bar"
+
+            socket.emit("squidgame", {
+                games: data.fullDocument, players: value
+            })
+        })
         //console.log(data.fullDocument); // You could parse out the needed info and send only that data.
     });
 
