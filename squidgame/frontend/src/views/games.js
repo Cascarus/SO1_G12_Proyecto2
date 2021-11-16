@@ -1,16 +1,18 @@
 import { Component, Fragment } from "react";
+import axios from 'axios'
+import HOST from '../HOST'
 
 class Games extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-
+            topGames: [],
+            lastGames: []
         }
     }
 
     componentDidMount() {
-
 
     }
 
