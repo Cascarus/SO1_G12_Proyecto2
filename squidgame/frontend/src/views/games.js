@@ -7,12 +7,42 @@ class Games extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            topGames: [],
+            topGames: [
+                {
+                    _id: "",
+                    Count: ""
+                },
+                {
+                    _id: "",
+                    Count: ""
+                }, {
+                    _id: "",
+                    Count: ""
+                }
+            ],
             lastGames: []
         }
     }
 
     componentDidMount() {
+
+        axios.get(HOST + '/Top3Juegos')
+            .then((res) => {
+                console.log(res.data)
+                this.setState({ topGames: res.data })
+            })
+            .catch((err) => {
+
+            })
+
+        axios.get(HOST + '/Ultimo10_Juegos')
+            .then((res) => {
+                console.log(res.data)
+                this.setState({ lastGames: res.data })
+            })
+            .catch((err) => {
+
+            })
 
     }
 
@@ -34,9 +64,9 @@ class Games extends Component {
                                         </div>
                                         <div className="col">
                                             <strong> <h1> <i> Juego </i> </h1> </strong>
-                                            <p style={{ fontSize: "30px" }}> 45 </p>
+                                            <p style={{ fontSize: "30px" }}> {this.state.topGames[0]._id} </p>
                                             <h1> <i> Veces jugadas </i> </h1>
-                                            <p style={{ fontSize: "30px" }}> 45 </p>
+                                            <p style={{ fontSize: "30px" }}> {this.state.topGames[0].Count} </p>
                                         </div>
                                     </div>
                                 </div>
@@ -55,9 +85,9 @@ class Games extends Component {
                                         </div>
                                         <div className="col">
                                             <strong> <h1> <i> Juego </i> </h1> </strong>
-                                            <p style={{ fontSize: "30px" }}> 45 </p>
+                                            <p style={{ fontSize: "30px" }}> {this.state.topGames[1]._id} </p>
                                             <h1> <i> Veces jugadas </i> </h1>
-                                            <p style={{ fontSize: "30px" }}> 45 </p>
+                                            <p style={{ fontSize: "30px" }}> {this.state.topGames[1].Count} </p>
                                         </div>
                                     </div>
                                 </div>
@@ -76,9 +106,9 @@ class Games extends Component {
                                         </div>
                                         <div className="col">
                                             <strong> <h1> <i> Juego </i> </h1> </strong>
-                                            <p style={{ fontSize: "30px" }}> 45 </p>
+                                            <p style={{ fontSize: "30px" }}> {this.state.topGames[2]._id} </p>
                                             <h1> <i> Veces jugadas </i> </h1>
-                                            <p style={{ fontSize: "30px" }}> 45 </p>
+                                            <p style={{ fontSize: "30px" }}> {this.state.topGames[2].Count} </p>
                                         </div>
                                     </div>
                                 </div>
@@ -97,15 +127,23 @@ class Games extends Component {
                             <th style={{ fontSize: "30px" }} > Juego </th>
                             <th style={{ fontSize: "30px" }} > Ganador </th>
                             <th style={{ fontSize: "30px" }} > Jugadores </th>
+                            <th style={{ fontSize: "30px" }} > Worker </th>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td style={{ fontSize: "25px" }}> 50 </td>
-                                <td style={{ fontSize: "25px" }}> 78 </td>
-                                <td style={{ fontSize: "25px" }}> Juego Uno </td>
-                                <td style={{ fontSize: "25px" }}> Juan </td>
-                                <td style={{ fontSize: "25px" }}> 888 </td>
-                            </tr>
+                            {
+                                this.state.lastGames.map((g, i) => {
+                                    return (
+                                        <tr>
+                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
+                                            <td style={{ fontSize: "25px" }}> {g.request_number} </td>
+                                        </tr>
+                                    )
+                                })
+                            }
                         </tbody>
 
                     </table>
