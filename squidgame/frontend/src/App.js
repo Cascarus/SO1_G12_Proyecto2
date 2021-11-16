@@ -9,7 +9,7 @@ import Games from './views/games';
 
 function App() {
   return (
-    <BrowserRouter basename={"myapp.34.68.145.104.nip.io"} >
+    <BrowserRouter >
       <NavBar />
       <Routes >
 
