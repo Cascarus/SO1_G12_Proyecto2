@@ -1,40 +1,26 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  creationTimestamp: null
   labels:
-    app: app-deployment
-  name: app-deployment
+    app: react-pod
+  name: react-pod
   namespace: squidgame
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: app-deployment
-  strategy: {}
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        app: app-deployment
-      annotations:
+  annotations:
         linkerd.io/inject: enabled
-    spec:
-      hostname: server
-      containers:
-      - name: react-app
-        image: efraalv/squidgame-dashboard
-        ports:
-          - containerPort: 80
-status: {}
+spec:
+  containers:
+  - name: react-app
+    image: efraalv/frontend-sg
+    ports:
+    - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: app-deployment
-  name: app-deployment
+    app: react-pod
+  name: react-pod
   namespace: squidgame
 spec:
   ports:
@@ -42,7 +28,7 @@ spec:
     protocol: TCP
     targetPort: 80
   selector:
-    app: app-deployment
+    app: react-pod
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -53,6 +39,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/websocket-services: "node-pod"
   namespace: squidgame
 spec:
   rules:
@@ -63,6 +50,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: app-deployment
+            name: react-pod
             port:
               number: 80
