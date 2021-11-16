@@ -28,14 +28,6 @@ class Players extends Component {
             this.convertToArray(data.players)
             //430: "{\"JuegosGanados\":24,\"Jugador\":\"430\",\"UltimoJuego\":\"call of duty\",\"Estado\":\"Winner\"}"
         });
-
-        /*axios.get(HOST + "/AgruparJugadores")
-            .then((res) => {
-                this.setState({ topPlayers: res.data })
-            })
-            .catch((err) => {
-                console.log(err)
-            })*/
     }
 
     convertToArray(data) {
@@ -78,13 +70,13 @@ class Players extends Component {
                                     {
                                         this.state.topPlayers.map((p) => {
                                             return (
-                                                <div key={"top" + p.player}>
-                                                    <div className="card-header">
+                                                <div key={"top" + p.player} style={{ marginBottom: "20px" }}>
+                                                    <div className="card-header bg-success">
                                                         <h1>
                                                             Player #{p.player}
                                                         </h1>
                                                     </div>
-                                                    <div className="card-body">
+                                                    <div className="card-body bg-dark">
                                                         <h1>
                                                             Victorias {p.data.JuegosGanados}
                                                         </h1>
@@ -93,6 +85,7 @@ class Players extends Component {
                                             )
                                         })
                                     }
+
                                 </div>
                             </div>
                         </div>

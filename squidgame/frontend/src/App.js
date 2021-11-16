@@ -5,6 +5,7 @@ import Home from './components/home';
 import Players from './views/players';
 import Workers from './views/workers';
 import Games from './views/games';
+import Logs from './views/logs';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/players" element={<Players />} />
         <Route exact path="/workers" element={<Workers />} />
         <Route exact path="/games" element={<Games />} />
+        <Route exact path="/logs" element={<Logs />} />
 
       </Routes>
     </BrowserRouter>

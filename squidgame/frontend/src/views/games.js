@@ -1,6 +1,9 @@
 import { Component, Fragment } from "react";
 import axios from 'axios'
 import HOST from '../HOST'
+import socketIOClient from 'socket.io-client';
+
+const socket = socketIOClient(HOST);
 
 class Games extends Component {
 
@@ -20,11 +23,17 @@ class Games extends Component {
                     Count: ""
                 }
             ],
-            lastGames: []
+            lastGames: [],
+
         }
     }
 
     componentDidMount() {
+
+        socket.on("squidgame:front", (data) => {
+            console.log(data)
+            //this.setState({ lastGames: data.games.splice(0, 9) })
+        });
 
         axios.get(HOST + '/Top3Juegos')
             .then((res) => {
@@ -32,7 +41,7 @@ class Games extends Component {
                 this.setState({ topGames: res.data })
             })
             .catch((err) => {
-
+                console.log(err)
             })
 
         axios.get(HOST + '/Ultimo10_Juegos')
@@ -41,7 +50,7 @@ class Games extends Component {
                 this.setState({ lastGames: res.data })
             })
             .catch((err) => {
-
+                console.log(err)
             })
 
     }

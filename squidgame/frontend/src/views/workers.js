@@ -2,6 +2,7 @@ import { Component, Fragment } from 'react'
 import DonutChart from '../components/donutGraph';
 import LinealGraph from '../components/linealGraph';
 import socketIOClient from 'socket.io-client';
+import axios from 'axios';
 
 import HOST from '../HOST'
 
@@ -32,19 +33,25 @@ class Workers extends Component {
             //430: "{\"JuegosGanados\":24,\"Jugador\":\"430\",\"UltimoJuego\":\"call of duty\",\"Estado\":\"Winner\"}"
         });
 
-        /*axios.get(HOST + '/MostrarInsersion')
+        axios.get(HOST + '/MostrarInsersion')
             .then((res) => {
-                this.setState({
-                    countKafka: res.data[0].Count,
-                    countPubSub: res.data[1].Count,
-                    countRabbit: res.data[2].Count,
 
+                res.data.map((r) => {
+                    if (r._id === "kafka") {
+                        this.setState({ countKafka: r.Count })
+                    }
+                    else if (r._id === "PubSub") {
+                        this.setState({ countPubSub: r.Count })
+                    }
+                    else if (r._id === "Rabbit") {
+                        this.setState({ countRabbit: r.Count })
+                    }
+                    return 0
                 })
-                console.log(res.data)
             })
-            .catch(() => {
-
-            })*/
+            .catch((err) => {
+                console.log(err)
+            })
 
     }
 
@@ -103,10 +110,6 @@ class Workers extends Component {
 
 
             <Fragment>
-
-                <div className="btn btn-danger" onClick={this.addToWorker}>
-                    Agregar
-                </div>
 
                 <div className="row">
 
@@ -182,8 +185,8 @@ class Workers extends Component {
                             </div>
                         </div>
 
-                        <div className="col" >
 
+                        <div className="col" >
 
                             <div className="row alert alert-primary" >
                                 <h1 className="alert-heading" style={{ fontSize: 30 }} >Google Pub/Sub</h1>
@@ -203,8 +206,9 @@ class Workers extends Component {
                                 <p className="h1" style={{ fontSize: 40 }} > {this.state.countRabbit} </p>
                             </div>
 
-
                         </div>
+
+
 
                     </div>
 
