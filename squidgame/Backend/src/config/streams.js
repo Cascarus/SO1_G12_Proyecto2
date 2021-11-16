@@ -11,12 +11,15 @@ const program = (socket) => {
         { fullDocument: "updateLookup" }
     );
 
+
     changeStream.on('change', (data) => {
+        var players;
         client.hgetall("players:all", function (err, value) {
-            console.log(value); // > "bar"
+            //console.log(value); // > "bar"
+            players = value
         });
-        console.log(data.fullDocument); // You could parse out the needed info and send only that data. 
-        //socket.emit("COSMOS", data)
+        socket.emit("squidgame", { games: data.fullDocument, players: players })
+        //console.log(data.fullDocument); // You could parse out the needed info and send only that data.
     });
 
 }

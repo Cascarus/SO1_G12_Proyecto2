@@ -1,25 +1,58 @@
 import { Component, Fragment } from "react";
+import axios from 'axios';
+import socketIOClient from 'socket.io-client';
+
+import HOST from "../HOST";
+
+const socket = socketIOClient(HOST);
+
 
 class Players extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            screen: 1024,
-            selectedPlayer: null
+            selectedPlayer: null,
+            topPlayers: [],
+            players: []
         }
 
 
         this.selectPlayer = this.selectPlayer.bind(this)
+        this.convertToArray = this.convertToArray.bind(this)
     }
 
 
     componentDidMount() {
-        console.log(window.screen.width)
-        this.setState({ screen: window.screen.width })
+
+        socket.on("squidgame:front", (data) => {
+            console.log(data)
+        });
+
+        axios.get(HOST + "/AgruparJugadores")
+            .then((res) => {
+                this.setState({ topPlayers: res.data })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+
+        this.convertToArray({})
 
     }
 
+    convertToArray(data) {
+
+        const temp = Object.entries(data);
+        var temp1 = temp.map(([key, value]) => {
+            return {
+                player: key,
+                data: value
+            }
+        })
+        this.setState({ players: temp1 })
+    }
 
     selectPlayer() {
 
@@ -45,17 +78,22 @@ class Players extends Component {
                             <div style={{ padding: "20px" }}>
                                 <div className="card" style={{ borderRadius: "10px" }} >
                                     {
-                                        this.state.selectedPlayer !== null &&
-                                        <div>
-                                            <div className="card-header">
-                                                <h1>
-                                                    Player #45645
-                                                </h1>
-                                            </div>
-                                            <div className="card-body">
-
-                                            </div>
-                                        </div>
+                                        this.state.topPlayers.map((p) => {
+                                            return (
+                                                <div>
+                                                    <div className="card-header">
+                                                        <h1>
+                                                            Player #{p._id}
+                                                        </h1>
+                                                    </div>
+                                                    <div className="card-body">
+                                                        <h1>
+                                                            Victorias {p.JuegosGanado}
+                                                        </h1>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
                                     }
                                 </div>
                             </div>
@@ -63,35 +101,41 @@ class Players extends Component {
 
                         <div className="col-8" style={{ padding: "10px" }} >
 
-                            <div className="fluid-container card card-body" style={{ borderStyle: "solid", borderColor: "white", borderRadius: "5px", backgroundColor: "#1a4a24", marginBottom: "20px" }}>
-                                <div className="row">
-                                    <div className="col-3">
-                                        <div className="btn btn-outline-success" style={{ borderColor: "black", borderStyle: "solid", textAlign: "center" }} onClick={() => this.selectPlayer()}>
-                                            <strong>
-                                                <p className="h1" style={{ fontSize: "60px", color: "white" }} >002</p>
-                                            </strong>
-                                        </div>
-                                    </div>
-                                    <div className="col-9">
-                                        <div className="row">
-                                            <div className="col" style={{ textAlign: "center" }}>
-                                                <h3><i>Ultimo Juego</i></h3>
-                                                <p className="h1" style={{ fontSize: "50px" }}>
-                                                    Game 15
-                                                </p>
-                                            </div>
-                                            <div className="col" style={{ textAlign: "center" }}>
-                                                <h3><i>Juegos ganados</i></h3>
-                                                <div className="card card body bg-danger">
-                                                    <p className="h1" style={{ fontSize: "50px" }}>
-                                                        15
-                                                    </p>
+                            {
+                                this.state.players.map((p) => {
+                                    return (
+                                        <div className="fluid-container card card-body" style={{ borderStyle: "solid", borderColor: "white", borderRadius: "5px", backgroundColor: "#1a4a24", marginBottom: "20px" }}>
+                                            <div className="row">
+                                                <div className="col-3">
+                                                    <div className="btn btn-outline-success" style={{ borderColor: "black", borderStyle: "solid", textAlign: "center" }} onClick={() => this.selectPlayer()}>
+                                                        <strong>
+                                                            <p className="h1" style={{ fontSize: "60px", color: "white" }} > {p.jugador} </p>
+                                                        </strong>
+                                                    </div>
+                                                </div>
+                                                <div className="col-9">
+                                                    <div className="row">
+                                                        <div className="col" style={{ textAlign: "center" }}>
+                                                            <h3><i>Ultimo Juego</i></h3>
+                                                            <p className="h1" style={{ fontSize: "50px" }}>
+                                                                {p.ultimojuego}
+                                                            </p>
+                                                        </div>
+                                                        <div className="col" style={{ textAlign: "center" }}>
+                                                            <h3><i>Juegos ganados</i></h3>
+                                                            <div className="card card body bg-danger">
+                                                                <p className="h1" style={{ fontSize: "50px" }}>
+                                                                    {p.juegosganados}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    )
+                                })
+                            }
 
 
                         </div>

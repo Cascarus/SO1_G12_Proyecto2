@@ -6,6 +6,6 @@ services:
     build: ./
     image: efraalv/squidgame-backend
     ports:
-      - "3000:3000"
+      - "3500:3500"
     volumes:
         - .:/user/src/app

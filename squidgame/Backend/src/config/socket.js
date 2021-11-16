@@ -1,4 +1,4 @@
-//import cosmos from './cosmosRT.js'
+import program from "./streams.js";
 
 import { io } from "socket.io-client";
 
@@ -10,10 +10,10 @@ const SocketHandler = (io) => {
         // console.log(socket.handshake.url);
         console.log("nuevo socket connectado:", socket.id);
 
-        /*socket.on("COSMOS", (data) => {
-            console.log(data.fullDocument)
-            io.emit("COSMOS", data)
-        });*/
+        socket.on("squidgame", (data) => {
+            //console.log(data.fullDocument)
+            io.emit("squidgame:front", data)
+        });
 
         socket.on("disconnect", () => {
             console.log(socket.id, "disconnected");
@@ -21,7 +21,7 @@ const SocketHandler = (io) => {
 
     });
 
-    //cosmos(socket)
+    program(socket)
 }
 
 
