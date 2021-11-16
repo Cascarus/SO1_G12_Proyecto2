@@ -9,9 +9,9 @@ import Games from './views/games';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={"myapp.34.68.145.104.nip.io"} >
       <NavBar />
-      <Routes>
+      <Routes >
 
         <Route exact path="/" element={<Home />} />
         <Route exact path="/players" element={<Players />} />
