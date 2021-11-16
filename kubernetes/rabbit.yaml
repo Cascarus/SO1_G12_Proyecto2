@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: api-rabbit-deployment
+  name: api-rabbit-deployment
+  namespace: squidgame
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api-rabbit-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: api-rabbit-deployment
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      hostname: server-pubsub
+      containers:
+      - name: api-rabbit-server
+        image: 429a1ea681b0/gopublisher1
+        ports:
+          - containerPort: 8080
+      - name: api-rabbit-client
+        image: 429a1ea681b0/gosubscriber1
+        ports:
+          - containerPort: 8090
+      - name: rabbitmq-service
+        image: rabbitmq:latest
+        ports:
+          - containerPort: 5672
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: api-rabbit-deployment
+  name: api-rabbit-deployment
+  namespace: squidgame
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: api-rabbit-deployment
+  type: ClusterIP

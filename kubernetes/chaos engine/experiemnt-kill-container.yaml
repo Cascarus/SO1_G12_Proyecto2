@@ -1,0 +1,24 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  name: experiment-kill-container
+  namespace: chaos-testing
+spec:
+  schedule: '@every 30s'
+  startingDeadlineSeconds: null
+  concurrencyPolicy: Forbid
+  historyLimit: 1
+  type: PodChaos
+  podChaos:
+    selector:
+      namespaces:
+        - squidgame
+      labelSelectors:
+        app: api-pubsub-deployment
+    mode: one
+    containerNames:
+      - api-pubsub-server
+    action: container-kill
+    duration: 5m
+    gracePeriod: 0
+    

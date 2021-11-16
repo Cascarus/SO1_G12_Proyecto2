@@ -1,0 +1,19 @@
+###
+GET http://localhost:3500/Top3Juegos
+###
+
+GET http://localhost:3500/MostrarInsersion
+###
+
+GET http://localhost:3500/Ultimo10_Juegos
+###
+
+GET http://localhost:3500/MostrarDatos
+###
+
+GET http://localhost:3500/AgruparJugadores
+
+###
+
+GET http://localhost:3500/players
+

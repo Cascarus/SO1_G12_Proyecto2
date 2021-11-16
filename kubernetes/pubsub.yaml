@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: api-pubsub-deployment
+  name: api-pubsub-deployment
+  namespace: squidgame
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api-pubsub-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: api-pubsub-deployment
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      hostname: server-pubsub
+      containers:
+      - name: api-pubsub-server
+        image: efraalv/pubsub-publisher
+        ports:
+          - containerPort: 8080
+      - name: api-pubsub-client
+        image: efraalv/pubsub-subscriber
+        ports:
+          - containerPort: 8090
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: api-pubsub-deployment
+  name: api-pubsub-deployment
+  namespace: squidgame
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: api-pubsub-deployment
+  clusterIP: None
+  type: ClusterIP

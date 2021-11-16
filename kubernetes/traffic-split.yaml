@@ -1,0 +1,16 @@
+apiVersion: split.smi-spec.io/v1alpha1
+kind: TrafficSplit
+metadata:
+  name: error-split
+  namespace: squidgame
+spec:
+  service: grpc-deployment-pubsub
+  backends:
+  - service: grpc-deployment-pubsub
+    weight: 334m
+  - service: grpc-deployment-rabbit
+    weight: 333m
+  - service: grpc-deployment-kafka
+    weight: 333m
+  - service: error-injector
+    weight: 0m

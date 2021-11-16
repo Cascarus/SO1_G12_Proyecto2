@@ -1,0 +1,161 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: grpc-deployment-pubsub
+  name: grpc-deployment-pubsub
+  namespace: squidgame
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: grpc-deployment-pubsub
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: grpc-deployment-pubsub
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      hostname: server
+      containers:
+      - name: grpc-game-server
+        image: cascarus/grpc-game-server
+        env:
+          - name: SERVICE_TYPE
+            value: "3"
+        ports:
+          - containerPort: 50051
+      - name: grpc-game-client
+        image: cascarus/grpc-game-client
+        ports:
+          - containerPort: 2000
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: grpc-deployment-pubsub
+  name: grpc-deployment-pubsub
+  namespace: squidgame
+spec:
+  ports:
+  - port: 2000
+    protocol: TCP
+    targetPort: 2000
+  selector:
+    app: grpc-deployment-pubsub
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: grpc-deployment-rabbit
+  name: grpc-deployment-rabbit
+  namespace: squidgame
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: grpc-deployment-rabbit
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: grpc-deployment-rabbit
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      hostname: server
+      containers:
+      - name: grpc-game-server
+        image: cascarus/grpc-game-server
+        env:
+          - name: SERVICE_TYPE
+            value: "2"
+        ports:
+          - containerPort: 50051
+      - name: grpc-game-client
+        image: cascarus/grpc-game-client
+        ports:
+          - containerPort: 2000
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: grpc-deployment-rabbit
+  name: grpc-deployment-rabbit
+  namespace: squidgame
+spec:
+  ports:
+  - port: 2000
+    protocol: TCP
+    targetPort: 2000
+  selector:
+    app: grpc-deployment-rabbit
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: grpc-deployment-kafka
+  name: grpc-deployment-kafka
+  namespace: squidgame
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: grpc-deployment-kafka
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: grpc-deployment-kafka
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      hostname: server
+      containers:
+      - name: grpc-game-server
+        image: cascarus/grpc-game-server
+        env:
+          - name: SERVICE_TYPE
+            value: "1"
+        ports:
+          - containerPort: 50051
+      - name: grpc-game-client
+        image: cascarus/grpc-game-client
+        ports:
+          - containerPort: 2000
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: grpc-deployment-kafka
+  name: grpc-deployment-kafka
+  namespace: squidgame
+spec:
+  ports:
+  - port: 2000
+    protocol: TCP
+    targetPort: 2000
+  selector:
+    app: grpc-deployment-kafka
+  type: ClusterIP
