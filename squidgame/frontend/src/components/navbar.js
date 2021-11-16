@@ -8,10 +8,6 @@ class NavBar extends Component {
         this.state = {}
     }
 
-    componentDidMount() {
-        console.log(this)
-    }
-
     render() {
         return (
 
@@ -19,7 +15,7 @@ class NavBar extends Component {
                 <nav className="nav" style={{ marginBottom: "50px" }}>
                     <div className="container">
                         <div className="logo">
-                            <img src="images/squidgame.png" alt="alt" width="150px" />
+                            <a href="/"><img src="images/squidgame.png" alt="alt" width="150px" /></a>
                         </div>
                         <div id="mainListDiv" className="main_list">
                             <ul className="navlinks">

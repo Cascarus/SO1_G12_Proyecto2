@@ -11,7 +11,7 @@ const SocketHandler = (io) => {
         console.log("nuevo socket connectado:", socket.id);
 
         socket.on("squidgame", (data) => {
-            console.log(data)
+            //console.log(data)
             io.emit("squidgame:front", data)
         });
 

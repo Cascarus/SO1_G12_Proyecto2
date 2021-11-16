@@ -15,7 +15,7 @@ const program = (socket) => {
     changeStream.on('change', async (data) => {
 
         client.hgetall("players:all", function (err, value) {
-            console.log(value); // > "bar"
+            //console.log(value); // > "bar"
 
             socket.emit("squidgame", {
                 games: data.fullDocument, players: value
